@@ -22,6 +22,7 @@ export default class Login extends Component {
   };
 
   render() {
+    const { history } = this.props;
     const { name, email } = this.state;
     return (
       <form>
@@ -51,6 +52,14 @@ export default class Login extends Component {
           onClick={ this.handleClick }
         >
           Play
+        </button>
+        <button
+          data-testid="btn-settings"
+          onClick={ () => history.push('/configuracoes') }
+
+        >
+
+          Configurações
         </button>
       </form>
     );
