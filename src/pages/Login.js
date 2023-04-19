@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { saveTokenInLocalStorage } from '../services/token';
 
 export default class Login extends Component {
   state = {
@@ -14,11 +15,17 @@ export default class Login extends Component {
     });
   };
 
+  handleClick = () => {
+    saveTokenInLocalStorage();
+    const { history } = this.props;
+    history.push('/game');
+  };
+
   render() {
     const { history } = this.props;
     const { name, email } = this.state;
     return (
-      <>
+      <form>
         <div>Login</div>
         <input
           type="text"
@@ -39,8 +46,10 @@ export default class Login extends Component {
           required
         />
         <button
+          type="button"
           data-testid="btn-play"
           disabled={ !email || !name }
+          onClick={ this.handleClick }
         >
           Play
         </button>
@@ -52,8 +61,7 @@ export default class Login extends Component {
 
           Configurações
         </button>
-
-      </>
+      </form>
     );
   }
 }
