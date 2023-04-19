@@ -1,7 +1,7 @@
 import React from "react";
 import { fireEvent, screen } from '@testing-library/react'
-import Login from "../../pages/Login";
-import renderWithRouterAndRedux from '../helpers/renderWithRouterAndRedux';
+import Login from "../pages/Login";
+import renderWithRouterAndRedux from './helpers/renderWithRouterAndRedux';
 import userEvent from '@testing-library/user-event';
 
 describe('Teste a página Login', () => {
@@ -50,8 +50,25 @@ describe('Teste a página Login', () => {
 
     expect(playButton).toBeDisabled();
 
+    fireEvent.change(inputName, { target: { value: '' } });
+
     fireEvent.change(inputemail, { target: { value: 'test@test.com' } });
 
     expect(playButton).toBeDisabled();
   });
+  // test('Verifica se o botão "play" salva as informações no local storage e envia  para /game', () => {
+  //   const { history } = renderWithRouterAndRedux(<Login />)
+  //   const { location: { pathname } } = history
+
+  //   const inputemail = screen.getByTestId('input-gravatar-email');
+  //   const inputName = screen.getByTestId('input-player-name');
+  //   const playButton = screen.getByTestId('btn-play');
+
+  //   fireEvent.change(inputName, { target: { value: 'Julia' } });
+  //   fireEvent.change(inputemail, { target: { value: 'test@test.com' } });
+
+  //   userEvent.click(playButton)
+
+  //   expect(pathname).toBe('/game');
+  // });
 })
