@@ -6,3 +6,5 @@ export const saveTokenInLocalStorage = async () => {
   const { token } = await fetchToken();
   if (token) JSON.stringify(localStorage.setItem('token', token));
 };
+
+export const returnTokenLocalStorge = () => localStorage.getItem('token');

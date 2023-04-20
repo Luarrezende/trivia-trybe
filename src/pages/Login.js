@@ -15,8 +15,8 @@ export default class Login extends Component {
     });
   };
 
-  handleClick = () => {
-    saveTokenInLocalStorage();
+  handleClick = async () => {
+    await saveTokenInLocalStorage();
     const { history } = this.props;
     history.push('/game');
   };
