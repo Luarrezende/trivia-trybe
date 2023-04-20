@@ -7,7 +7,6 @@ const INITIAL_STATE = {
 };
 
 const player = (state = INITIAL_STATE, action) => {
-  console.log(action);
   switch (action.type) {
   case PLAYER:
     return {
