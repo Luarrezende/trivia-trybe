@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { returnTokenLocalStorge } from '../services/token';
+import Header from '../components/Header';
 
 export default class Game extends Component {
   state = {
@@ -70,6 +71,7 @@ export default class Game extends Component {
   render() {
     return (
       <main>
+        <Header />
         { this.renderQuestion(0) }
       </main>
     );
