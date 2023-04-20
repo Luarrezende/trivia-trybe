@@ -61,8 +61,8 @@ class Login extends Component {
         <button
           data-testid="btn-settings"
           onClick={ () => history.push('/configuracoes') }
-        >
 
+        >
           Configurações
         </button>
       </form>
