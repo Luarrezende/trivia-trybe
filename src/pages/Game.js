@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import { returnTokenLocalStorge } from '../services/token';
 import Header from '../components/Header';
 import { addAssertions } from '../redux/actions';
 
-export default class Game extends Component {
+class Game extends Component {
   state = {
     questions: [],
   };
@@ -102,3 +103,5 @@ Game.propTypes = {
   }).isRequired,
   dispatch: PropTypes.func.isRequired,
 };
+
+export default connect(null, null)(Game);
