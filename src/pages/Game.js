@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import { returnTokenLocalStorge } from '../services/token';
 import Header from '../components/Header';
+import { addAssertions } from '../redux/actions';
 
-export default class Game extends Component {
+class Game extends Component {
   state = {
     questions: [],
   };
@@ -28,6 +30,17 @@ export default class Game extends Component {
     }
   };
 
+  answer = (param) => {
+    const { dispatch } = this.props;
+    if (param === 'correto') {
+      const number = 1;
+      dispatch(addAssertions(number));
+    } else {
+      const number = 0;
+      dispatch(addAssertions(number));
+    }
+  };
+
   renderQuestion = (index) => {
     const { questions } = this.state;
     const question = questions[index] || {};
@@ -40,7 +53,12 @@ export default class Game extends Component {
     const answersBtns = allAnswers.map((answer, indexAnswers) => {
       if (indexAnswers === 0) {
         return (
-          <button key="#" data-testid="correct-answer" id={ indexAnswers }>
+          <button
+            key="#"
+            data-testid="correct-answer"
+            id={ indexAnswers }
+            onClick={ () => this.answer('correto') }
+          >
             {answer}
           </button>
         );
@@ -50,6 +68,7 @@ export default class Game extends Component {
           key={ indexAnswers }
           data-testid={ `wrong-answer-${indexAnswers - 1}` }
           id={ indexAnswers }
+          onClick={ () => this.answer('errado') }
         >
           {answer}
         </button>
@@ -83,4 +102,7 @@ Game.propTypes = {
   history: PropTypes.shape({
     push: PropTypes.func.isRequired,
   }).isRequired,
+  dispatch: PropTypes.func.isRequired,
 };
+
+export default connect(null, null)(Game);
