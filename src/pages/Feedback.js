@@ -34,5 +34,4 @@ Feedback.propTypes = {
   assertions: PropTypes.number.isRequired,
 };
 
-
 export default connect(mapStateToProps)(Feedback);
