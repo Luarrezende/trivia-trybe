@@ -2,8 +2,9 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { returnTokenLocalStorge } from '../services/token';
 import Header from '../components/Header';
+import { addAssertions, addScorePoints } from '../redux/actions';
 
-export default class Game extends Component {
+class Game extends Component {
   state = {
     questions: [],
   };
@@ -25,6 +26,18 @@ export default class Game extends Component {
     } catch (error) {
       localStorage.removeItem('token');
       history.push('/');
+    }
+  };
+
+  answer = (param) => {
+    const { dispatch } = this.props;
+    if (param === 'correto') {
+      const number = 1;
+      dispatch(addAssertions(number));
+      this.calcPoints();
+    } else {
+      const number = 0;
+      dispatch(addAssertions(number));
     }
   };
 
@@ -60,12 +73,33 @@ export default class Game extends Component {
     return (
       <div>
         <h1 data-testid="question-category">{ question.category }</h1>
+
         <h2 data-testid="question-text">{ question.question }</h2>
+
         <div data-testid="answer-options">
           { answersBtns.sort(() => Math.random() - matchRandomParamNumber) }
         </div>
       </div>
     );
+  };
+
+  // esta função está sendo chamada na função answer por enquanto
+  calcPoints = () => {
+    const { difficulty, dispatch } = this.props;
+    const hitValue = 10;
+    const timer = 30; // este valor virá do componente timer, ainda não está pronto
+    const hard = 3;
+
+    switch (difficulty) {
+    case 'easy':
+      return dispatch(addScorePoints((hitValue + (timer * 1))));
+    case 'medium':
+      return dispatch(addScorePoints((hitValue + (timer * 2))));
+    case 'hard':
+      return dispatch(addScorePoints((hitValue + (timer * hard))));
+    default:
+      break;
+    }
   };
 
   render() {
@@ -78,8 +112,16 @@ export default class Game extends Component {
   }
 }
 
+const mapStateToProps = (state) => ({
+  difficulty: state.player.difficulty,
+});
+
 Game.propTypes = {
   history: PropTypes.shape({
     push: PropTypes.func.isRequired,
   }).isRequired,
+  dispatch: PropTypes.func.isRequired,
+  difficulty: PropTypes.string.isRequired,
 };
+
+export default connect(mapStateToProps)(Game);
