@@ -1,13 +1,13 @@
 import { PLAYER, SCORE, EMAIL } from '../actions';
 
 const INITIAL_STATE = {
-  player: '',
-  email: '',
+  name: '',
+  assertions: 0,
   score: 0,
+  gravatarEmail: '',
 };
 
 const player = (state = INITIAL_STATE, action) => {
-  console.log(action);
   switch (action.type) {
   case PLAYER:
     return {

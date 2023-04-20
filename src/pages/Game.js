@@ -34,6 +34,7 @@ export default class Game extends Component {
 
     const newArrayIncorrectAnswers = new Set(question.incorrect_answers);
     const incorrectAnswers = [...newArrayIncorrectAnswers];
+
     const allAnswers = [question.correct_answer, ...incorrectAnswers];
 
     const answersBtns = allAnswers.map((answer, indexAnswers) => {
