@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 import { saveTokenInLocalStorage } from '../services/token';
 
 export default class Login extends Component {
@@ -53,14 +54,15 @@ export default class Login extends Component {
         >
           Play
         </button>
-        <button
-          data-testid="btn-settings"
-          onClick={ () => history.push('/configuracoes') }
+        <Link to="/configuracoes">
+          <button
+            data-testid="btn-settings"
 
-        >
+          >
 
-          Configurações
-        </button>
+            Configurações
+          </button>
+        </Link>
       </form>
     );
   }

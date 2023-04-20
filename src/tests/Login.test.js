@@ -1,5 +1,7 @@
 import React from "react";
-import { fireEvent, screen } from '@testing-library/react'
+import { fireEvent, render, screen } from '@testing-library/react'
+import { act } from 'react-dom/test-utils';
+import App from '../App';
 import Login from "../pages/Login";
 import renderWithRouterAndRedux from './helpers/renderWithRouterAndRedux';
 import userEvent from '@testing-library/user-event';
@@ -51,24 +53,39 @@ describe('Teste a página Login', () => {
     expect(playButton).toBeDisabled();
 
     fireEvent.change(inputName, { target: { value: '' } });
-
     fireEvent.change(inputemail, { target: { value: 'test@test.com' } });
 
     expect(playButton).toBeDisabled();
   });
-  // test('Verifica se o botão "play" salva as informações no local storage e envia  para /game', () => {
-  //   const { history } = renderWithRouterAndRedux(<Login />)
-  //   const { location: { pathname } } = history
+  test('Verifica se o botão "play" envia as informações para /game', () => {
+    const { history} = renderWithRouterAndRedux(<App />);
+ 
+    const inputemail = screen.getByTestId('input-gravatar-email');
+    const inputName = screen.getByTestId('input-player-name');
+    const playButton = screen.getByTestId('btn-play');
 
-  //   const inputemail = screen.getByTestId('input-gravatar-email');
-  //   const inputName = screen.getByTestId('input-player-name');
-  //   const playButton = screen.getByTestId('btn-play');
+    fireEvent.change(inputName, { target: { value: 'Julia' } });
+    fireEvent.change(inputemail, { target: { value: 'test@test.com' } });
 
-  //   fireEvent.change(inputName, { target: { value: 'Julia' } });
-  //   fireEvent.change(inputemail, { target: { value: 'test@test.com' } });
+    userEvent.click(playButton);
 
-  //   userEvent.click(playButton)
+    act(() => {
+      history.push('/game');
+    });
 
-  //   expect(pathname).toBe('/game');
-  // });
+    expect(history.location.pathname).toMatch('/game');  
+  });
+  test('Verifica se o botão "configurações" vai para a rota /configuracoes', async () => {
+    const { history } = renderWithRouterAndRedux(<App />);
+
+    const configButton = screen.getByTestId('btn-settings');
+
+    userEvent.click(configButton);
+
+    act(() => {
+      history.push('/configuracoes');
+    });
+
+    expect(history.location.pathname).toMatch('/configuracoes')
+  })
 })
