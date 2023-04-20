@@ -1,7 +1,8 @@
-import { PLAYER, SCORE } from '../actions';
+import { PLAYER, SCORE, EMAIL } from '../actions';
 
 const INITIAL_STATE = {
   player: '',
+  email: '',
   score: 0,
 };
 
@@ -12,6 +13,11 @@ const player = (state = INITIAL_STATE, action) => {
     return {
       ...state,
       player: action.payload,
+    };
+  case EMAIL:
+    return {
+      ...state,
+      email: action.payload,
     };
   case SCORE:
     return {

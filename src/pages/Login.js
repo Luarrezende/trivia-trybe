@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { saveTokenInLocalStorage } from '../services/token';
-import { addPlayer } from '../redux/actions';
+import { addPlayer, addEmail } from '../redux/actions';
 
 class Login extends Component {
   state = {
@@ -19,9 +19,10 @@ class Login extends Component {
 
   handleClick = () => {
     saveTokenInLocalStorage();
-    const { name } = this.state;
+    const { name, email } = this.state;
     const { history, dispatch } = this.props;
     dispatch(addPlayer(name));
+    dispatch(addEmail(email));
     history.push('/game');
   };
 
