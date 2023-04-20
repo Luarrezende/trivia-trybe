@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { saveTokenInLocalStorage } from '../services/token';
 
-export default class Login extends Component {
+class Login extends Component {
   state = {
     name: '',
     email: '',
@@ -18,7 +18,10 @@ export default class Login extends Component {
 
   handleClick = () => {
     saveTokenInLocalStorage();
-    const { history } = this.props;
+    const { name, email } = this.state;
+    const { history, dispatch } = this.props;
+    dispatch(addPlayer(name));
+    dispatch(addEmail(email));
     history.push('/game');
   };
 
@@ -59,7 +62,6 @@ export default class Login extends Component {
             data-testid="btn-settings"
 
           >
-
             Configurações
           </button>
         </Link>
@@ -69,7 +71,10 @@ export default class Login extends Component {
 }
 
 Login.propTypes = {
+  dispatch: PropTypes.func.isRequired,
   history: PropTypes.shape({
     push: PropTypes.func.isRequired,
   }).isRequired,
 };
+
+export default connect()(Login);
