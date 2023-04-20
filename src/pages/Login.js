@@ -17,8 +17,8 @@ class Login extends Component {
     });
   };
 
-  handleClick = () => {
-    saveTokenInLocalStorage();
+  handleClick = async () => {
+    await saveTokenInLocalStorage();
     const { name, email } = this.state;
     const { history, dispatch } = this.props;
     dispatch(addPlayer(name));
