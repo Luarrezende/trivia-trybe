@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
 import { saveTokenInLocalStorage } from '../services/token';
+import { addPlayer, addEmail } from '../redux/actions';
 
 class Login extends Component {
   state = {
@@ -57,14 +58,13 @@ class Login extends Component {
         >
           Play
         </button>
-        <Link to="/configuracoes">
-          <button
-            data-testid="btn-settings"
+        <button
+          data-testid="btn-settings"
+          onClick={ () => history.push('/configuracoes') }
 
-          >
-            Configurações
-          </button>
-        </Link>
+        >
+          Configurações
+        </button>
       </form>
     );
   }
