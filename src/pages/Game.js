@@ -5,6 +5,7 @@ import { returnTokenLocalStorge } from '../services/token';
 import Header from '../components/Header';
 import { addAssertions, addScorePoints } from '../redux/actions';
 
+
 class Game extends Component {
   state = {
     questions: [],
@@ -48,6 +49,7 @@ class Game extends Component {
 
     const newArrayIncorrectAnswers = new Set(question.incorrect_answers);
     const incorrectAnswers = [...newArrayIncorrectAnswers];
+
     const allAnswers = [question.correct_answer, ...incorrectAnswers];
 
     const answersBtns = allAnswers.map((answer, indexAnswers) => {
@@ -68,7 +70,7 @@ class Game extends Component {
           key={ indexAnswers }
           data-testid={ `wrong-answer-${indexAnswers - 1}` }
           id={ indexAnswers }
-          onClick={ () => this.answer('incorreto') }
+          onClick={ () => this.answer('errado') }
         >
           {answer}
         </button>

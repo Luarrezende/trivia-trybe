@@ -5,6 +5,7 @@ export const ASSERTIONS = 'ASSERTIONS';
 export const SAVE_DIFFICULTY = 'SAVE_DIFFICULTY';
 export const ADD_SCORE_POINTS = 'ADD_SCORE_POINTS';
 
+
 export const addPlayer = (player) => ({
   type: PLAYER,
   payload: player,

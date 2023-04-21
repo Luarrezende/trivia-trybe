@@ -8,8 +8,9 @@ import {
 } from '../actions';
 
 const INITIAL_STATE = {
-  player: '',
-  email: '',
+  name: '',
+  assertions: 0,
+  gravatarEmail: '',
   score: 0,
   difficulty: 'medium',
 };
@@ -19,12 +20,12 @@ const player = (state = INITIAL_STATE, action) => {
   case PLAYER:
     return {
       ...state,
-      player: action.payload,
+      name: action.payload,
     };
   case EMAIL:
     return {
       ...state,
-      email: action.payload,
+      gravatarEmail: action.payload,
     };
   case SCORE:
     return {

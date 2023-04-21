@@ -10,6 +10,10 @@ class Login extends Component {
     email: '',
   };
 
+  componentDidUpdate() {
+    saveTokenInLocalStorage();
+  }
+
   handleChange = ({ target }) => {
     const { name, value } = target;
     this.setState({
@@ -17,8 +21,7 @@ class Login extends Component {
     });
   };
 
-  handleClick = async () => {
-    await saveTokenInLocalStorage();
+  handleClick = () => {
     const { name, email } = this.state;
     const { history, dispatch } = this.props;
     dispatch(addPlayer(name));
