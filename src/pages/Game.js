@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import { returnTokenLocalStorge } from '../services/token';
 import Header from '../components/Header';
 import { addAssertions, addScorePoints } from '../redux/actions';
@@ -52,7 +53,12 @@ class Game extends Component {
     const answersBtns = allAnswers.map((answer, indexAnswers) => {
       if (indexAnswers === 0) {
         return (
-          <button key="#" data-testid="correct-answer" id={ indexAnswers }>
+          <button
+            key="#"
+            data-testid="correct-answer"
+            id={ indexAnswers }
+            onClick={ () => this.answer('correto') }
+          >
             {answer}
           </button>
         );
@@ -62,6 +68,7 @@ class Game extends Component {
           key={ indexAnswers }
           data-testid={ `wrong-answer-${indexAnswers - 1}` }
           id={ indexAnswers }
+          onClick={ () => this.answer('incorreto') }
         >
           {answer}
         </button>
