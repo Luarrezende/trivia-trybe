@@ -8,6 +8,7 @@ import { addAssertions } from '../redux/actions';
 class Game extends Component {
   state = {
     questions: [],
+    answeredQuestions: false,
   };
 
   async componentDidMount() {
@@ -30,6 +31,12 @@ class Game extends Component {
     }
   };
 
+
+  handleClick = () => {
+    this.setState({
+      answeredQuestions: true,
+    });
+
   answer = (param) => {
     const { dispatch } = this.props;
     if (param === 'correto') {
@@ -42,7 +49,7 @@ class Game extends Component {
   };
 
   renderQuestion = (index) => {
-    const { questions } = this.state;
+    const { questions, answeredQuestions } = this.state;
     const question = questions[index] || {};
 
     const newArrayIncorrectAnswers = new Set(question.incorrect_answers);
@@ -57,6 +64,8 @@ class Game extends Component {
             key="#"
             data-testid="correct-answer"
             id={ indexAnswers }
+            className={ answeredQuestions ? '' : 'correct-answer' }
+            onClick={ this.handleClick }
             onClick={ () => this.answer('correto') }
           >
             {answer}
@@ -68,6 +77,8 @@ class Game extends Component {
           key={ indexAnswers }
           data-testid={ `wrong-answer-${indexAnswers - 1}` }
           id={ indexAnswers }
+          className={ answeredQuestions ? '' : 'wrong-answer' }
+          onClick={ this.handleClick }
           onClick={ () => this.answer('errado') }
         >
           {answer}
