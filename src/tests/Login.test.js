@@ -58,14 +58,15 @@ describe('Teste a página Login', () => {
     expect(playButton).toBeDisabled();
   });
   test('Verifica se o botão "play" envia as informações para /game', () => {
-    const { history} = renderWithRouterAndRedux(<App />);
+    const { history } = renderWithRouterAndRedux(<App />);
  
     const inputemail = screen.getByTestId('input-gravatar-email');
     const inputName = screen.getByTestId('input-player-name');
-    const playButton = screen.getByTestId('btn-play');
 
     fireEvent.change(inputName, { target: { value: 'Julia' } });
     fireEvent.change(inputemail, { target: { value: 'test@test.com' } });
+
+    const playButton = screen.getByTestId('btn-play');
 
     userEvent.click(playButton);
 
