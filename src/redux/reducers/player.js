@@ -4,7 +4,6 @@ const INITIAL_STATE = {
   player: '',
   email: '',
   score: 0,
-  timer: 0,
 };
 
 const player = (state = INITIAL_STATE, action) => {
