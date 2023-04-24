@@ -4,10 +4,14 @@ import { connect } from 'react-redux';
 import { returnTokenLocalStorge } from '../services/token';
 import Header from '../components/Header';
 import { addAssertions } from '../redux/actions';
+import './Game.css';
+import AnswerButton from '../components/AnswerButton';
 
 class Game extends Component {
   state = {
     questions: [],
+    correctAnswer: '',
+    randomAnswers: [],
     answeredQuestions: false,
   };
 
@@ -24,29 +28,44 @@ class Game extends Component {
       if (results.length === 0) {
         throw new Error('Token inválido!');
       }
-      this.setState({ questions: results });
+      this.setState({ questions: results }, () => this.saveRandomAnswers(0));
+
+      this.saveRandomAnswers(0);
     } catch (error) {
       localStorage.removeItem('token');
       history.push('/');
     }
   };
 
-  handleClick = (param) => {
+  handleClass = () => {
     this.setState({
       answeredQuestions: true,
     });
+  };
+
+  handleAssertions = (param) => {
     const { dispatch } = this.props;
     if (param === 'correto') {
       const number = 1;
       dispatch(addAssertions(number));
+      this.handleClass();
     } else {
       const number = 0;
       dispatch(addAssertions(number));
+      this.handleClass();
     }
   };
 
-  renderQuestion = (index) => {
-    const { questions, answeredQuestions } = this.state;
+  // esta funão usa um algoritimo chamado Fisher-Yates, encontrei aqui (https://www.delftstack.com/pt/howto/javascript/shuffle-array-javascript/)
+  randomArray = (array) => {
+    for (let i = array.length - 1; i > 0; i -= 1) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+  };
+
+  saveRandomAnswers = (index) => {
+    const { questions } = this.state;
     const question = questions[index] || {};
 
     const newArrayIncorrectAnswers = new Set(question.incorrect_answers);
@@ -54,41 +73,54 @@ class Game extends Component {
 
     const allAnswers = [question.correct_answer, ...incorrectAnswers];
 
-    const answersBtns = allAnswers.map((answer, indexAnswers) => {
-      if (indexAnswers === 0) {
+    this.randomArray(allAnswers);
+
+    this.setState({
+      correctAnswer: question.correct_answer,
+      randomAnswers: allAnswers,
+    });
+  };
+
+  renderQuestion = (index) => {
+    const { questions, answeredQuestions, correctAnswer, randomAnswers } = this.state;
+
+    const question = questions[index] || {};
+
+    const answersBtns = randomAnswers.map((answer, indexAnswers) => {
+      if (answer === correctAnswer) {
         return (
-          <button
+          <AnswerButton
             key="#"
-            data-testid="correct-answer"
-            id={ indexAnswers }
-            className={ answeredQuestions ? '' : 'correct-answer' }
-            onClick={ () => this.handleClick('correto') }
-          >
-            {answer}
-          </button>
+            answer={ answer }
+            indexAnswer={ indexAnswers }
+            dataTestId="correct-answer"
+            answeredQuestions={ answeredQuestions }
+            handleAssertions={ this.handleAssertions }
+            handleAssertionsParam="correto"
+            className="correct-answer"
+          />
         );
       }
       return (
-        <button
+        <AnswerButton
           key={ indexAnswers }
-          data-testid={ `wrong-answer-${indexAnswers - 1}` }
-          id={ indexAnswers }
-          className={ answeredQuestions ? '' : 'wrong-answer' }
-          onClick={ () => this.handleClick('errado') }
-        >
-          {answer}
-        </button>
+          answer={ answer }
+          indexAnswer={ indexAnswers }
+          dataTestId={ `wrong-answer-${indexAnswers - 1}` }
+          answeredQuestions={ answeredQuestions }
+          handleAssertions={ this.handleAssertions }
+          handleAssertionsParam="errado"
+          className="wrong-answer"
+        />
       );
     });
-
-    const matchRandomParamNumber = 0.5;
 
     return (
       <div>
         <h1 data-testid="question-category">{ question.category }</h1>
         <h2 data-testid="question-text">{ question.question }</h2>
-        <div data-testid="answer-options">
-          { answersBtns.sort(() => Math.random() - matchRandomParamNumber) }
+        <div data-testid="answer-options" className="btns">
+          { answersBtns }
         </div>
       </div>
     );
