@@ -31,21 +31,21 @@ class Game extends Component {
     }
   };
 
-
-  handleClick = () => {
+  handleClick = (param) => {
     this.setState({
       answeredQuestions: true,
     });
 
-  answer = (param) => {
-    const { dispatch } = this.props;
-    if (param === 'correto') {
-      const number = 1;
-      dispatch(addAssertions(number));
-    } else {
-      const number = 0;
-      dispatch(addAssertions(number));
-    }
+    answer = () => {
+      const { dispatch } = this.props;
+      if (param === 'correto') {
+        const number = 1;
+        dispatch(addAssertions(number));
+      } else {
+        const number = 0;
+        dispatch(addAssertions(number));
+      }
+    };
   };
 
   renderQuestion = (index) => {
@@ -65,8 +65,7 @@ class Game extends Component {
             data-testid="correct-answer"
             id={ indexAnswers }
             className={ answeredQuestions ? '' : 'correct-answer' }
-            onClick={ this.handleClick }
-            onClick={ () => this.answer('correto') }
+            onClick={ () => this.handleClick('correto') }
           >
             {answer}
           </button>
@@ -78,8 +77,7 @@ class Game extends Component {
           data-testid={ `wrong-answer-${indexAnswers - 1}` }
           id={ indexAnswers }
           className={ answeredQuestions ? '' : 'wrong-answer' }
-          onClick={ this.handleClick }
-          onClick={ () => this.answer('errado') }
+          onClick={ () => this.handleClick('errado') }
         >
           {answer}
         </button>
