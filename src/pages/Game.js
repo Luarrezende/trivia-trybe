@@ -15,8 +15,8 @@ class Game extends Component {
     answeredQuestions: false,
   };
 
-  async componentDidMount() {
-    await this.fetchQuestions();
+  componentDidMount() {
+    this.fetchQuestions();
   }
 
   fetchQuestions = async () => {
