@@ -11,8 +11,8 @@ class Game extends Component {
     answeredQuestions: false,
   };
 
-  async componentDidMount() {
-    await this.fetchQuestions();
+  componentDidMount() {
+    this.fetchQuestions();
   }
 
   fetchQuestions = async () => {
@@ -35,17 +35,14 @@ class Game extends Component {
     this.setState({
       answeredQuestions: true,
     });
-
-    answer = () => {
-      const { dispatch } = this.props;
-      if (param === 'correto') {
-        const number = 1;
-        dispatch(addAssertions(number));
-      } else {
-        const number = 0;
-        dispatch(addAssertions(number));
-      }
-    };
+    const { dispatch } = this.props;
+    if (param === 'correto') {
+      const number = 1;
+      dispatch(addAssertions(number));
+    } else {
+      const number = 0;
+      dispatch(addAssertions(number));
+    }
   };
 
   renderQuestion = (index) => {
