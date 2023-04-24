@@ -6,10 +6,13 @@ import Header from '../components/Header';
 export default class Game extends Component {
   state = {
     questions: [],
+    buttonDisable: false,
+    timer: 30,
   };
 
   async componentDidMount() {
     await this.fetchQuestions();
+    this.timerDecrement();
   }
 
   fetchQuestions = async () => {
@@ -28,6 +31,21 @@ export default class Game extends Component {
     }
   };
 
+  timerDecrement = () => {
+    const time = 1000;
+    setInterval(() => {
+      const { timer } = this.state;
+      if (timer === 0) {
+        clearInterval();
+        this.setState({ buttonDisable: true });
+      } else {
+        this.setState({
+          timer: timer - 1,
+        });
+      }
+    }, time);
+  };
+
   renderQuestion = (index) => {
     const { questions } = this.state;
     const question = questions[index] || {};
@@ -35,11 +53,17 @@ export default class Game extends Component {
     const newArrayIncorrectAnswers = new Set(question.incorrect_answers);
     const incorrectAnswers = [...newArrayIncorrectAnswers];
     const allAnswers = [question.correct_answer, ...incorrectAnswers];
+    const { buttonDisable } = this.state;
 
     const answersBtns = allAnswers.map((answer, indexAnswers) => {
       if (indexAnswers === 0) {
         return (
-          <button key="#" data-testid="correct-answer" id={ indexAnswers }>
+          <button
+            key="#"
+            data-testid="correct-answer"
+            id={ indexAnswers }
+            disabled={ buttonDisable }
+          >
             {answer}
           </button>
         );
@@ -49,14 +73,13 @@ export default class Game extends Component {
           key={ indexAnswers }
           data-testid={ `wrong-answer-${indexAnswers - 1}` }
           id={ indexAnswers }
+          disabled={ buttonDisable }
         >
           {answer}
         </button>
       );
     });
-
     const matchRandomParamNumber = 0.5;
-
     return (
       <div>
         <h1 data-testid="question-category">{ question.category }</h1>
@@ -69,11 +92,17 @@ export default class Game extends Component {
   };
 
   render() {
+    const { timer } = this.state;
     return (
-      <main>
-        <Header />
-        { this.renderQuestion(0) }
-      </main>
+      <>
+        <main>
+          <Header />
+          { this.renderQuestion(0) }
+        </main>
+        <div>
+          { timer }
+        </div>
+      </>
     );
   }
 }
