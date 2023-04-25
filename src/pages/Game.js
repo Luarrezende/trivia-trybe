@@ -19,8 +19,8 @@ class Game extends Component {
 
   async componentDidMount() {
     await this.fetchQuestions();
-    this.timerDecrement(); 
-  };
+    this.timerDecrement();
+  }
 
   fetchQuestions = async () => {
     const { history } = this.props;
@@ -90,7 +90,6 @@ class Game extends Component {
     const incorrectAnswers = [...newArrayIncorrectAnswers];
 
     const allAnswers = [question.correct_answer, ...incorrectAnswers];
-    const { buttonDisable } = this.state;
 
     this.randomArray(allAnswers);
 
@@ -101,7 +100,12 @@ class Game extends Component {
   };
 
   renderQuestion = (index) => {
-    const { questions, answeredQuestions, correctAnswer, randomAnswers } = this.state;
+    const {
+      questions,
+      answeredQuestions,
+      correctAnswer,
+      randomAnswers,
+      buttonDisable } = this.state;
 
     const question = questions[index] || {};
 

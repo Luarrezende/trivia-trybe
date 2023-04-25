@@ -11,6 +11,7 @@ class AnswerButton extends Component {
       handleAssertions,
       handleAssertionsParam,
       className,
+      disabled,
     } = this.props;
 
     return (
@@ -20,6 +21,7 @@ class AnswerButton extends Component {
         data-testid={ dataTestId }
         className={ answeredQuestions ? className : '' }
         onClick={ () => handleAssertions(handleAssertionsParam) }
+        disabled={ disabled }
       >
         { answer }
 
@@ -36,6 +38,7 @@ AnswerButton.propTypes = {
   handleAssertions: PropTypes.func.isRequired,
   handleAssertionsParam: PropTypes.string.isRequired,
   className: PropTypes.string.isRequired,
+  disabled: PropTypes.bool.isRequired,
 };
 
 export default AnswerButton;
