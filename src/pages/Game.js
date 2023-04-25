@@ -22,6 +22,15 @@ class Game extends Component {
     this.timerDecrement();
   }
 
+  newFetch = () => {
+    this.fetchQuestions();
+    this.setState({
+      answeredQuestions: false,
+      buttonDisable: false,
+      timer: 30,
+    });
+  };
+
   fetchQuestions = async () => {
     const { history } = this.props;
 
@@ -65,8 +74,8 @@ class Game extends Component {
   handleAssertions = (param) => {
     const { dispatch } = this.props;
     if (param === 'correto') {
-      const number = 1;
-      dispatch(addAssertions(number));
+      const number1 = 1;
+      dispatch(addAssertions(number1));
       this.calcPoints();
       this.handleClass();
     } else {
@@ -175,16 +184,18 @@ class Game extends Component {
   };
 
   render() {
-    const { timer } = this.state;
+    const { timer, answeredQuestions } = this.state;
     return (
       <>
         <main>
           <Header />
           { this.renderQuestion(0) }
         </main>
-        <div>
-          { timer }
-        </div>
+        {
+          answeredQuestions === true || timer === 0
+            ? <button data-testid="btn-next" onClick={ this.newFetch }>Next</button>
+            : <div>{ timer }</div>
+        }
       </>
     );
   }
