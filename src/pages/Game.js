@@ -7,6 +7,8 @@ import { addAssertions, addScore } from '../redux/actions';
 import './Game.css';
 import AnswerButton from '../components/AnswerButton';
 
+let counter = 0;
+
 class Game extends Component {
   state = {
     questions: [],
@@ -21,6 +23,22 @@ class Game extends Component {
     await this.fetchQuestions();
     this.timerDecrement();
   }
+
+  newFetch = () => {
+    const { history } = this.props;
+    const number5 = 5;
+    counter += 1;
+    console.log(counter);
+    if (counter >= number5) {
+      history.push('/feedback');
+    }
+    this.fetchQuestions();
+    this.setState({
+      answeredQuestions: false,
+      buttonDisable: false,
+      timer: 30,
+    });
+  };
 
   fetchQuestions = async () => {
     const { history } = this.props;
@@ -65,8 +83,8 @@ class Game extends Component {
   handleAssertions = (param) => {
     const { dispatch } = this.props;
     if (param === 'correto') {
-      const number = 1;
-      dispatch(addAssertions(number));
+      const number1 = 1;
+      dispatch(addAssertions(number1));
       this.calcPoints();
       this.handleClass();
     } else {
@@ -157,34 +175,37 @@ class Game extends Component {
 
   // esta função está sendo chamada na função answer por enquanto
   calcPoints = () => {
+    const { timer } = this.state;
     const { difficulty, dispatch } = this.props;
     const hitValue = 10;
-    const timer = 30; // este valor virá do componente timer, ainda não está pronto
+    const timerState = timer; // este valor virá do componente timer, ainda não está pronto
     const hard = 3;
 
     switch (difficulty) {
     case 'easy':
-      return dispatch(addScore((hitValue + (timer * 1))));
+      return dispatch(addScore((hitValue + (timerState * 1))));
     case 'medium':
-      return dispatch(addScore((hitValue + (timer * 2))));
+      return dispatch(addScore((hitValue + (timerState * 2))));
     case 'hard':
-      return dispatch(addScore((hitValue + (timer * hard))));
+      return dispatch(addScore((hitValue + (timerState * hard))));
     default:
       break;
     }
   };
 
   render() {
-    const { timer } = this.state;
+    const { timer, answeredQuestions } = this.state;
     return (
       <>
         <main>
           <Header />
           { this.renderQuestion(0) }
         </main>
-        <div>
-          { timer }
-        </div>
+        {
+          answeredQuestions === true || timer === 0
+            ? <button data-testid="btn-next" onClick={ this.newFetch }>Next</button>
+            : <div>{ timer }</div>
+        }
       </>
     );
   }

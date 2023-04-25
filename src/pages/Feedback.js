@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import Header from '../components/Header';
 
 class Feedback extends Component {
@@ -11,14 +12,30 @@ class Feedback extends Component {
       <main>
         <Header />
         <div data-testid="feedback-total-score">
-          <h2>Total Score</h2>
-          <p data-testid="feedback-total-question">{ score }</p>
+          <p>{ score }</p>
+        </div>
+        <div data-testid="feedback-total-question">
+          <p>{ assertions }</p>
         </div>
         {
           assertions >= validateScore
             ? <p data-testid="feedback-text">Well Done!</p>
             : <p data-testid="feedback-text">Could be better...</p>
         }
+        <Link to="/">
+          <button
+            data-testid="btn-play-again"
+          >
+            Play Again
+          </button>
+        </Link>
+        <Link to="/ranking">
+          <button
+            data-testid="btn-ranking"
+          >
+            Ranking
+          </button>
+        </Link>
       </main>
     );
   }
@@ -32,6 +49,7 @@ const mapStateToProps = (state) => ({
 Feedback.propTypes = {
   score: PropTypes.number.isRequired,
   assertions: PropTypes.number.isRequired,
+  // history: PropTypes.func.isRequired,
 };
 
 export default connect(mapStateToProps)(Feedback);
