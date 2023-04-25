@@ -10,13 +10,16 @@ import AnswerButton from '../components/AnswerButton';
 class Game extends Component {
   state = {
     questions: [],
+    buttonDisable: false,
+    timer: 30,
     correctAnswer: '',
     randomAnswers: [],
     answeredQuestions: false,
   };
 
-  componentDidMount() {
-    this.fetchQuestions();
+  async componentDidMount() {
+    await this.fetchQuestions();
+    this.timerDecrement();
   }
 
   fetchQuestions = async () => {
@@ -35,6 +38,21 @@ class Game extends Component {
       localStorage.removeItem('token');
       history.push('/');
     }
+  };
+
+  timerDecrement = () => {
+    const time = 1000;
+    setInterval(() => {
+      const { timer } = this.state;
+      if (timer === 0) {
+        clearInterval();
+        this.setState({ buttonDisable: true });
+      } else {
+        this.setState({
+          timer: timer - 1,
+        });
+      }
+    }, time);
   };
 
   handleClass = () => {
@@ -82,7 +100,12 @@ class Game extends Component {
   };
 
   renderQuestion = (index) => {
-    const { questions, answeredQuestions, correctAnswer, randomAnswers } = this.state;
+    const {
+      questions,
+      answeredQuestions,
+      correctAnswer,
+      randomAnswers,
+      buttonDisable } = this.state;
 
     const question = questions[index] || {};
 
@@ -98,6 +121,7 @@ class Game extends Component {
             handleAssertions={ this.handleAssertions }
             handleAssertionsParam="correto"
             className="correct-answer"
+            disabled={ buttonDisable }
           />
         );
       }
@@ -111,6 +135,7 @@ class Game extends Component {
           handleAssertions={ this.handleAssertions }
           handleAssertionsParam="errado"
           className="wrong-answer"
+          disabled={ buttonDisable }
         />
       );
     });
@@ -127,11 +152,17 @@ class Game extends Component {
   };
 
   render() {
+    const { timer } = this.state;
     return (
-      <main>
-        <Header />
-        { this.renderQuestion(0) }
-      </main>
+      <>
+        <main>
+          <Header />
+          { this.renderQuestion(0) }
+        </main>
+        <div>
+          { timer }
+        </div>
+      </>
     );
   }
 }
