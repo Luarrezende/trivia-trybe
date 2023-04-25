@@ -6,6 +6,7 @@ import Header from '../components/Header';
 import { addAssertions, addScore } from '../redux/actions';
 import './Game.css';
 import AnswerButton from '../components/AnswerButton';
+import { setUsersLocalStorage } from '../services/saveUserLocalStorage';
 
 let counter = 0;
 
@@ -24,18 +25,30 @@ class Game extends Component {
     this.timerDecrement();
   }
 
-  newFetch = () => {
+  savePlayerInfosLocalStorage = () => {
+    const { gravatarEmail, score, name } = this.props;
+    const userResults = {
+      gravatarEmail,
+      score,
+      name,
+    };
+    setUsersLocalStorage(userResults);
+  };
+
+  newFetch = async () => {
     const { history } = this.props;
     const number5 = 5;
     counter += 1;
     if (counter >= number5) {
       history.push('/feedback');
+      counter = 0;
+      this.savePlayerInfosLocalStorage();
     } else {
       this.setState({
         answeredQuestions: false,
         buttonDisable: false,
         timer: 30,
-      });
+      }, this.saveRandomAnswers(counter));
     }
   };
 
@@ -48,9 +61,9 @@ class Game extends Component {
       if (results.length === 0) {
         throw new Error('Token inválido!');
       }
-      this.setState({ questions: results }, () => this.saveRandomAnswers(0));
+      this.setState({ questions: results }, () => this.saveRandomAnswers(counter));
 
-      this.saveRandomAnswers(0);
+      /* this.saveRandomAnswers(counter); */
     } catch (error) {
       localStorage.removeItem('token');
       history.push('/');
@@ -211,6 +224,9 @@ class Game extends Component {
 
 const mapStateToProps = (state) => ({
   difficulty: state.player.difficulty,
+  gravatarEmail: state.player.gravatarEmail,
+  score: state.player.score,
+  name: state.player.name,
 });
 
 Game.propTypes = {
@@ -219,6 +235,9 @@ Game.propTypes = {
   }).isRequired,
   dispatch: PropTypes.func.isRequired,
   difficulty: PropTypes.string.isRequired,
+  gravatarEmail: PropTypes.string.isRequired,
+  score: PropTypes.number.isRequired,
+  name: PropTypes.string.isRequired,
 };
 
 export default connect(mapStateToProps)(Game);

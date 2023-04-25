@@ -4,7 +4,7 @@ import {
   EMAIL,
   ASSERTIONS,
   SAVE_DIFFICULTY,
-  ADD_SCORE_POINTS,
+  CLEAR_INFOS,
 } from '../actions';
 
 const INITIAL_STATE = {
@@ -42,10 +42,14 @@ const player = (state = INITIAL_STATE, action) => {
       ...state,
       difficulty: action.payload,
     };
-  case ADD_SCORE_POINTS:
+  case CLEAR_INFOS:
     return {
       ...state,
-      score: state.score + action.payload,
+      name: '',
+      assertions: 0,
+      gravatarEmail: '',
+      score: 0,
+      difficulty: 'easy',
     };
   default:
     return state;
