@@ -28,16 +28,15 @@ class Game extends Component {
     const { history } = this.props;
     const number5 = 5;
     counter += 1;
-    console.log(counter);
     if (counter >= number5) {
       history.push('/feedback');
+    } else {
+      this.setState({
+        answeredQuestions: false,
+        buttonDisable: false,
+        timer: 30,
+      });
     }
-    this.fetchQuestions();
-    this.setState({
-      answeredQuestions: false,
-      buttonDisable: false,
-      timer: 30,
-    });
   };
 
   fetchQuestions = async () => {
@@ -178,16 +177,15 @@ class Game extends Component {
     const { timer } = this.state;
     const { difficulty, dispatch } = this.props;
     const hitValue = 10;
-    const timerState = timer; // este valor virá do componente timer, ainda não está pronto
     const hard = 3;
 
     switch (difficulty) {
     case 'easy':
-      return dispatch(addScore((hitValue + (timerState * 1))));
+      return dispatch(addScore((hitValue + (timer * 1))));
     case 'medium':
-      return dispatch(addScore((hitValue + (timerState * 2))));
+      return dispatch(addScore((hitValue + (timer * 2))));
     case 'hard':
-      return dispatch(addScore((hitValue + (timerState * hard))));
+      return dispatch(addScore((hitValue + (timer * hard))));
     default:
       break;
     }
@@ -199,7 +197,7 @@ class Game extends Component {
       <>
         <main>
           <Header />
-          { this.renderQuestion(0) }
+          { this.renderQuestion(counter) }
         </main>
         {
           answeredQuestions === true || timer === 0
