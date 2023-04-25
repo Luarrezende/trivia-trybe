@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { returnTokenLocalStorge } from '../services/token';
 import Header from '../components/Header';
-import { addAssertions } from '../redux/actions';
+import { addAssertions, addScore } from '../redux/actions';
 import './Game.css';
 import AnswerButton from '../components/AnswerButton';
 
@@ -58,6 +58,7 @@ class Game extends Component {
   handleClass = () => {
     this.setState({
       answeredQuestions: true,
+      buttonDisable: true,
     });
   };
 
@@ -66,6 +67,7 @@ class Game extends Component {
     if (param === 'correto') {
       const number = 1;
       dispatch(addAssertions(number));
+      this.calcPoints();
       this.handleClass();
     } else {
       const number = 0;
@@ -143,12 +145,33 @@ class Game extends Component {
     return (
       <div>
         <h1 data-testid="question-category">{ question.category }</h1>
+
         <h2 data-testid="question-text">{ question.question }</h2>
+
         <div data-testid="answer-options" className="btns">
           { answersBtns }
         </div>
       </div>
     );
+  };
+
+  // esta função está sendo chamada na função answer por enquanto
+  calcPoints = () => {
+    const { difficulty, dispatch } = this.props;
+    const hitValue = 10;
+    const timer = 30; // este valor virá do componente timer, ainda não está pronto
+    const hard = 3;
+
+    switch (difficulty) {
+    case 'easy':
+      return dispatch(addScore((hitValue + (timer * 1))));
+    case 'medium':
+      return dispatch(addScore((hitValue + (timer * 2))));
+    case 'hard':
+      return dispatch(addScore((hitValue + (timer * hard))));
+    default:
+      break;
+    }
   };
 
   render() {
@@ -167,11 +190,16 @@ class Game extends Component {
   }
 }
 
+const mapStateToProps = (state) => ({
+  difficulty: state.player.difficulty,
+});
+
 Game.propTypes = {
   history: PropTypes.shape({
     push: PropTypes.func.isRequired,
   }).isRequired,
   dispatch: PropTypes.func.isRequired,
+  difficulty: PropTypes.string.isRequired,
 };
 
-export default connect(null, null)(Game);
+export default connect(mapStateToProps)(Game);

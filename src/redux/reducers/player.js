@@ -1,10 +1,18 @@
-import { PLAYER, SCORE, EMAIL, ASSERTIONS } from '../actions';
+import {
+  PLAYER,
+  SCORE,
+  EMAIL,
+  ASSERTIONS,
+  SAVE_DIFFICULTY,
+  ADD_SCORE_POINTS,
+} from '../actions';
 
 const INITIAL_STATE = {
   name: '',
   assertions: 0,
   gravatarEmail: '',
   score: 0,
+  difficulty: 'medium',
 };
 
 const player = (state = INITIAL_STATE, action) => {
@@ -28,6 +36,16 @@ const player = (state = INITIAL_STATE, action) => {
     return {
       ...state,
       assertions: action.payload + state.assertions,
+    };
+  case SAVE_DIFFICULTY:
+    return {
+      ...state,
+      difficulty: action.payload,
+    };
+  case ADD_SCORE_POINTS:
+    return {
+      ...state,
+      score: state.score + action.payload,
     };
   default:
     return state;
