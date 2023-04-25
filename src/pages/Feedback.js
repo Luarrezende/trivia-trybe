@@ -11,14 +11,17 @@ class Feedback extends Component {
       <main>
         <Header />
         <div data-testid="feedback-total-score">
-          <h2>Total Score</h2>
-          <p data-testid="feedback-total-question">{ score }</p>
+          <p>{ score }</p>
+        </div>
+        <div data-testid="feedback-total-question">
+          <p>{ assertions }</p>
         </div>
         {
           assertions >= validateScore
             ? <p data-testid="feedback-text">Well Done!</p>
             : <p data-testid="feedback-text">Could be better...</p>
         }
+
       </main>
     );
   }
