@@ -4,15 +4,22 @@ import { connect } from 'react-redux';
 import { returnTokenLocalStorge } from '../services/token';
 import Header from '../components/Header';
 import { addAssertions, addScorePoints } from '../redux/actions';
-
+import './Game.css';
+import AnswerButton from '../components/AnswerButton';
 
 class Game extends Component {
   state = {
     questions: [],
+    buttonDisable: false,
+    timer: 30,
+    correctAnswer: '',
+    randomAnswers: [],
+    answeredQuestions: false,
   };
 
   async componentDidMount() {
     await this.fetchQuestions();
+    this.timerDecrement();
   }
 
   fetchQuestions = async () => {
@@ -24,26 +31,59 @@ class Game extends Component {
       if (results.length === 0) {
         throw new Error('Token inválido!');
       }
-      this.setState({ questions: results });
+      this.setState({ questions: results }, () => this.saveRandomAnswers(0));
+
+      this.saveRandomAnswers(0);
     } catch (error) {
       localStorage.removeItem('token');
       history.push('/');
     }
   };
 
-  answer = (param) => {
+  timerDecrement = () => {
+    const time = 1000;
+    setInterval(() => {
+      const { timer } = this.state;
+      if (timer === 0) {
+        clearInterval();
+        this.setState({ buttonDisable: true });
+      } else {
+        this.setState({
+          timer: timer - 1,
+        });
+      }
+    }, time);
+  };
+
+  handleClass = () => {
+    this.setState({
+      answeredQuestions: true,
+    });
+  };
+
+  handleAssertions = (param) => {
     const { dispatch } = this.props;
     if (param === 'correto') {
       const number = 1;
       dispatch(addAssertions(number));
       this.calcPoints();
+      this.handleClass();
     } else {
       const number = 0;
       dispatch(addAssertions(number));
+      this.handleClass();
     }
   };
 
-  renderQuestion = (index) => {
+  // esta funão usa um algoritimo chamado Fisher-Yates, encontrei aqui (https://www.delftstack.com/pt/howto/javascript/shuffle-array-javascript/)
+  randomArray = (array) => {
+    for (let i = array.length - 1; i > 0; i -= 1) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+  };
+
+  saveRandomAnswers = (index) => {
     const { questions } = this.state;
     const question = questions[index] || {};
 
@@ -52,32 +92,54 @@ class Game extends Component {
 
     const allAnswers = [question.correct_answer, ...incorrectAnswers];
 
-    const answersBtns = allAnswers.map((answer, indexAnswers) => {
-      if (indexAnswers === 0) {
+    this.randomArray(allAnswers);
+
+    this.setState({
+      correctAnswer: question.correct_answer,
+      randomAnswers: allAnswers,
+    });
+  };
+
+  renderQuestion = (index) => {
+    const {
+      questions,
+      answeredQuestions,
+      correctAnswer,
+      randomAnswers,
+      buttonDisable } = this.state;
+
+    const question = questions[index] || {};
+
+    const answersBtns = randomAnswers.map((answer, indexAnswers) => {
+      if (answer === correctAnswer) {
         return (
-          <button
+          <AnswerButton
             key="#"
-            data-testid="correct-answer"
-            id={ indexAnswers }
-            onClick={ () => this.answer('correto') }
-          >
-            {answer}
-          </button>
+            answer={ answer }
+            indexAnswer={ indexAnswers }
+            dataTestId="correct-answer"
+            answeredQuestions={ answeredQuestions }
+            handleAssertions={ this.handleAssertions }
+            handleAssertionsParam="correto"
+            className="correct-answer"
+            disabled={ buttonDisable }
+          />
         );
       }
       return (
-        <button
+        <AnswerButton
           key={ indexAnswers }
-          data-testid={ `wrong-answer-${indexAnswers - 1}` }
-          id={ indexAnswers }
-          onClick={ () => this.answer('errado') }
-        >
-          {answer}
-        </button>
+          answer={ answer }
+          indexAnswer={ indexAnswers }
+          dataTestId={ `wrong-answer-${indexAnswers - 1}` }
+          answeredQuestions={ answeredQuestions }
+          handleAssertions={ this.handleAssertions }
+          handleAssertionsParam="errado"
+          className="wrong-answer"
+          disabled={ buttonDisable }
+        />
       );
     });
-
-    const matchRandomParamNumber = 0.5;
 
     return (
       <div>
@@ -85,8 +147,8 @@ class Game extends Component {
 
         <h2 data-testid="question-text">{ question.question }</h2>
 
-        <div data-testid="answer-options">
-          { answersBtns.sort(() => Math.random() - matchRandomParamNumber) }
+        <div data-testid="answer-options" className="btns">
+          { answersBtns }
         </div>
       </div>
     );
@@ -112,11 +174,17 @@ class Game extends Component {
   };
 
   render() {
+    const { timer } = this.state;
     return (
-      <main>
-        <Header />
-        { this.renderQuestion(0) }
-      </main>
+      <>
+        <main>
+          <Header />
+          { this.renderQuestion(0) }
+        </main>
+        <div>
+          { timer }
+        </div>
+      </>
     );
   }
 }
