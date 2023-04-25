@@ -29,7 +29,7 @@ class Game extends Component {
     const number5 = 5;
     counter += 1;
     console.log(counter);
-    if (counter === number5) {
+    if (counter >= number5) {
       history.push('/feedback');
     }
     this.fetchQuestions();
