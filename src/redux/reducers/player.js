@@ -12,7 +12,7 @@ const INITIAL_STATE = {
   assertions: 0,
   gravatarEmail: '',
   score: 0,
-  difficulty: 'medium',
+  difficulty: 'easy',
 };
 
 const player = (state = INITIAL_STATE, action) => {

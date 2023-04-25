@@ -31,7 +31,12 @@ class AnswerButton extends Component {
 }
 
 AnswerButton.propTypes = {
-  answer: PropTypes.shape().isRequired,
+  answer: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.number,
+    PropTypes.bool,
+  ]),
+
   indexAnswer: PropTypes.number.isRequired,
   dataTestId: PropTypes.string.isRequired,
   answeredQuestions: PropTypes.bool.isRequired,
@@ -39,6 +44,10 @@ AnswerButton.propTypes = {
   handleAssertionsParam: PropTypes.string.isRequired,
   className: PropTypes.string.isRequired,
   disabled: PropTypes.bool.isRequired,
+};
+
+AnswerButton.defaultProps = {
+  answer: 'lau',
 };
 
 export default AnswerButton;
