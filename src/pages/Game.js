@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { returnTokenLocalStorge } from '../services/token';
 import Header from '../components/Header';
-import { addAssertions, addScorePoints } from '../redux/actions';
+import { addAssertions, addScore } from '../redux/actions';
 import './Game.css';
 import AnswerButton from '../components/AnswerButton';
 
@@ -58,6 +58,7 @@ class Game extends Component {
   handleClass = () => {
     this.setState({
       answeredQuestions: true,
+      buttonDisable: true,
     });
   };
 
@@ -163,11 +164,11 @@ class Game extends Component {
 
     switch (difficulty) {
     case 'easy':
-      return dispatch(addScorePoints((hitValue + (timer * 1))));
+      return dispatch(addScore((hitValue + (timer * 1))));
     case 'medium':
-      return dispatch(addScorePoints((hitValue + (timer * 2))));
+      return dispatch(addScore((hitValue + (timer * 2))));
     case 'hard':
-      return dispatch(addScorePoints((hitValue + (timer * hard))));
+      return dispatch(addScore((hitValue + (timer * hard))));
     default:
       break;
     }
