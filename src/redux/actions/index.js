@@ -3,7 +3,7 @@ export const SCORE = 'SCORE';
 export const EMAIL = 'EMAIL';
 export const ASSERTIONS = 'ASSERTIONS';
 export const SAVE_DIFFICULTY = 'SAVE_DIFFICULTY';
-export const ADD_SCORE_POINTS = 'ADD_SCORE_POINTS';
+export const CLEAR_INFOS = 'CLEAR_INFOS';
 
 export const addPlayer = (player) => ({
   type: PLAYER,
@@ -30,7 +30,6 @@ export const saveDifficulty = (difficulty) => ({
   payload: difficulty,
 });
 
-// export const addScorePoints = (points) => ({
-//   type: ADD_SCORE_POINTS,
-//   payload: points,
-// });
+export const clearInfos = () => ({
+  type: CLEAR_INFOS,
+});

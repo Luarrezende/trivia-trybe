@@ -3,8 +3,15 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import Header from '../components/Header';
+import { clearInfos } from '../redux/actions';
 
 class Feedback extends Component {
+  handlePlayAgain = () => {
+    const { dispatch } = this.props;
+    dispatch(clearInfos());
+    localStorage.removeItem('token');
+  };
+
   render() {
     const validateScore = 3;
     const { assertions, score } = this.props;
@@ -25,6 +32,7 @@ class Feedback extends Component {
         <Link to="/">
           <button
             data-testid="btn-play-again"
+            onClick={ this.handlePlayAgain }
           >
             Play Again
           </button>
@@ -32,6 +40,7 @@ class Feedback extends Component {
         <Link to="/ranking">
           <button
             data-testid="btn-ranking"
+            onClick={ this.handlePlayAgain }
           >
             Ranking
           </button>
@@ -49,7 +58,7 @@ const mapStateToProps = (state) => ({
 Feedback.propTypes = {
   score: PropTypes.number.isRequired,
   assertions: PropTypes.number.isRequired,
-  // history: PropTypes.func.isRequired,
+  dispatch: PropTypes.func.isRequired,
 };
 
 export default connect(mapStateToProps)(Feedback);
